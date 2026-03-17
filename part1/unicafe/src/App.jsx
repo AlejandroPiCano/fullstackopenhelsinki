@@ -54,11 +54,19 @@ const App = () => {
   ]
 
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0))
 
   return (
     <div>
       <p>{anecdotes[selected]}</p>
-      <button onClick={() => setSelected(Math.floor(Math.random() * anecdotes.length))}>next anecdote</button>
+      <p> has {votes[selected]} votes</p>
+      <button style={{"backgroundColor":"lightblue"}}
+      onClick={() => {
+        const copy = [...votes]
+        copy[selected] += 1
+        setVotes(copy)
+      }}>vote</button>
+      <button style={{"backgroundColor": "lightgray"}} onClick={() => setSelected(Math.floor(Math.random() * anecdotes.length))}>next anecdote</button>
     </div>
   )
 
