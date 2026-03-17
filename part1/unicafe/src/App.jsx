@@ -1,6 +1,10 @@
 import { useState } from 'react'
 
 
+const Button = ({handleClick, text, backgroundColor}) => <button style={{"backgroundColor": backgroundColor, "color": "white"}} onClick={handleClick}>{text}</button>
+
+const StatisticLine = ({text, value}) => <p>{text} {value}</p>
+
 const Statistics = ({good, neutral, bad}) => {
     return <>
         <h1>statistics</h1>
@@ -8,12 +12,12 @@ const Statistics = ({good, neutral, bad}) => {
             <p>No feedback given</p>
         ) : (
             <>
-                <p>good: {good}</p>
-                <p>neutral: {neutral}</p>
-                <p>bad: {bad}</p>
-                <p>all: {good + neutral + bad}</p>
-                <p>average: {(good - bad) / (good + neutral + bad) || 0} </p>
-                <p>positive: {good / (good + neutral + bad) * 100 || 0} % </p>
+                <StatisticLine text="good" value={good} />
+                <StatisticLine text="neutral" value={neutral} />
+                <StatisticLine text="bad" value={bad} />
+                <StatisticLine text="all" value={good + neutral + bad} />
+                <StatisticLine text="average" value={(good - bad) / (good + neutral + bad) || 0} />
+                <StatisticLine text="positive" value={good / (good + neutral + bad) * 100 || 0} />
             </>
         )}      
    </>
@@ -28,9 +32,9 @@ const App = () => {
   return (
     <div>
         <h1>Give feedback</h1>
-        <button style={{"backgroundColor":"blue", "color": "white"}}onClick={() => setGood(good + 1)}>good</button>
-        <button style={{"backgroundColor":"gray", "color": "white"}} onClick={() => setNeutral(neutral + 1)}>neutral</button>
-        <button style={{"backgroundColor":"red", "color": "white"}}  onClick={() => setBad(bad + 1)}>bad</button>
+        <Button handleClick={() => setGood(good + 1)} text="good" backgroundColor="blue" />
+        <Button handleClick={() => setNeutral(neutral + 1)} text="neutral" backgroundColor="gray" />
+        <Button handleClick={() => setBad(bad + 1)} text="bad" backgroundColor="red" />
         <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   )
