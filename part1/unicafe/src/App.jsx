@@ -58,6 +58,7 @@ const App = () => {
 
   return (
     <div>
+        <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected]}</p>
       <p> has {votes[selected]} votes</p>
       <button style={{"backgroundColor":"lightblue"}}
@@ -67,6 +68,9 @@ const App = () => {
         setVotes(copy)
       }}>vote</button>
       <button style={{"backgroundColor": "lightgray"}} onClick={() => setSelected(Math.floor(Math.random() * anecdotes.length))}>next anecdote</button>
+        <h1>Anecdote with most votes</h1>
+        <p>{anecdotes[votes.indexOf(Math.max(...votes))]}</p>
+        <p> has {Math.max(...votes)} votes</p>
     </div>
   )
 
