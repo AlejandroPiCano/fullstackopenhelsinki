@@ -1,3 +1,5 @@
-export const PersonDetails = ({ person }) => (
-    <p>{person.name} {person.number}</p>
-)
+
+export const PersonDetails = ({ person, deletePerson }) => {  
+    
+    return <p>{person.name} {person.number} <button onClick={() => deletePerson(person.id, person.name)}>delete</button></p>
+}

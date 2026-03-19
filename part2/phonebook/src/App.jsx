@@ -45,6 +45,20 @@ const App = () => {
     setNewNumber('')
   }
 
+
+  function deletePerson(id, name) {
+        if(window.confirm(`Delete ${name}?`)) {
+            phoneBookService.deletePerson(id).then(data => {    
+                console.log(data);
+                setPersons(persons.filter(person => person.id !== id))
+            }).catch(error => {
+                alert(error.response.data.error)
+            })
+        }
+    }
+
+
+
   const personsToShow = newFilter === ''
     ? persons
     : persons.filter(person => person.name.toLowerCase().includes(newFilter.toLowerCase()))
@@ -59,7 +73,7 @@ const App = () => {
 
       <h2>Numbers</h2>
      
-      <PersonList personsToShow={personsToShow} />
+      <PersonList personsToShow={personsToShow} deletePerson={deletePerson} />
       
     </div>
   )
