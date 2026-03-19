@@ -12,7 +12,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')  
   const [newFilter, setNewFilter] = useState('')
-  const [message, setMessage] = useState(null) 
+  const [message, setMessage] = useState(null)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     console.log('effect')
@@ -25,7 +26,8 @@ const App = () => {
 
   function clearMessage() {
     setTimeout(() => {           
-            setMessage(null)            
+            setMessage(null) 
+            setError(null)           
           }, 3000) 
   }
 
@@ -42,7 +44,8 @@ const App = () => {
           setMessage(`${newName} updated successfully`)
           clearMessage()
         }).catch(error => {
-          alert(error.response.data.error)
+          setError(error.response.data.error)
+          clearMessage()
         })
       }      
     }
@@ -58,7 +61,8 @@ const App = () => {
          setMessage(`${newName} added successfully`)
          clearMessage()
       }).catch(error => {
-        alert(error.response.data.error)
+        setError(error.response.data.error)
+        clearMessage();        
       })
     }
         
@@ -73,7 +77,8 @@ const App = () => {
                 console.log(data);
                 setPersons(persons.filter(person => person.id !== id))
             }).catch(error => {
-                alert(error.response.data.error)
+                setError(`Information of ${name} has already been removed from server`)
+                clearMessage();                
             })
         }
     }
@@ -87,7 +92,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} />
+      <Notification message={message} error={error} />
       <Filter newFilter={newFilter} setNewFilter={setNewFilter} />
        <h2>Add a new</h2>
 
