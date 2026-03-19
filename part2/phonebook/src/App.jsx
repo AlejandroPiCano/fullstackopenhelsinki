@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Filter } from './components/filter'
 import { PersonForm } from './components/personForm'
 import { PersonList } from './components/personList'
+import phoneBookService from './services/phoneBookService'
 
 const App = () => {
 
@@ -13,8 +14,10 @@ const App = () => {
 
   useEffect(() => {
     console.log('effect')
-    axios("http://localhost:3001/persons").then(response => {      
-      setPersons(response.data)
+    phoneBookService.getAll().then(data => {
+      setPersons(data)
+    }).catch(error => { 
+      console.log(error)
     })
   }, [])
 
@@ -32,7 +35,12 @@ const App = () => {
       id: persons.length + 1,
     }
 
-    setPersons(persons.concat(personObject))
+    phoneBookService.create(personObject).then(data => {
+      setPersons(persons.concat(data))
+    }).catch(error => {
+      alert(error.response.data.error)
+    })
+        
     setNewName('')
     setNewNumber('')
   }
