@@ -4,6 +4,7 @@ import { Filter } from './components/filter'
 import { PersonForm } from './components/personForm'
 import { PersonList } from './components/personList'
 import phoneBookService from './services/phoneBookService'
+import { Notification } from './components/Notification'
 
 const App = () => {
 
@@ -11,6 +12,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')  
   const [newFilter, setNewFilter] = useState('')
+  const [message, setMessage] = useState(null) 
 
   useEffect(() => {
     console.log('effect')
@@ -20,6 +22,12 @@ const App = () => {
       console.log(error)
     })
   }, [])
+
+  function clearMessage() {
+    setTimeout(() => {           
+            setMessage(null)            
+          }, 3000) 
+  }
 
   function handleOnSubmit(event) {
     event.preventDefault()
@@ -31,6 +39,8 @@ const App = () => {
 
         phoneBookService.update(personToUpdate.id, updatedPerson).then(data => {
           setPersons(persons.map(person => person.id !== personToUpdate.id ? person : data))
+          setMessage(`${newName} updated successfully`)
+          clearMessage()
         }).catch(error => {
           alert(error.response.data.error)
         })
@@ -45,6 +55,8 @@ const App = () => {
 
       phoneBookService.create(personObject).then(data => {
         setPersons(persons.concat(data))
+         setMessage(`${newName} added successfully`)
+         clearMessage()
       }).catch(error => {
         alert(error.response.data.error)
       })
@@ -75,6 +87,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter newFilter={newFilter} setNewFilter={setNewFilter} />
        <h2>Add a new</h2>
 
