@@ -25,7 +25,7 @@ function App() {
         <p>Too many matches, specify another filter</p>
       ) : countriesToShow.length !== 1 ? (
         <ul>
-          {countriesToShow.map(country => <li key={country.name.common}>{country.name.common}</li>)}
+          {countriesToShow.map(country => <li key={country.name.common}>{country.name.common} <button onClick={() => setNewFilter(country.name.common)}>show</button> </li>)}
         </ul>
       ) : (
         <div>
