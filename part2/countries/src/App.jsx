@@ -16,33 +16,90 @@ function App() {
     setNewFilter(event.target.value)
   }
 
-  const countriesToShow = newFilter === '' ? countries : countries.filter(country => country.name.common.toLowerCase().includes(newFilter.toLowerCase()))
-  return (
-    <>
-      <p> find countries </p> <input value={newFilter} onChange={handleFilterChange} />
+  const api_key =  import.meta.env.OPENWEATHERMAP_API_KEY
+  console.log('API key:', api_key);
+  console.log(api_key.length);
 
-      {countriesToShow.length > 10 ? (
+  const countriesToShow = newFilter === '' ? countries : countries.filter(country => country.name.common.toLowerCase().includes(newFilter.toLowerCase()))
+ 
+  const [temperature, setTemperature] = useState(null);
+  const [wind, setWind] = useState(null);
+
+  const country = countriesToShow.length === 1
+    ? countriesToShow[0]
+    : null;
+
+  useEffect(() => {
+    if (!country) return;
+
+
+    //const openweatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&exclude=hourly,daily&=${api_key}`;
+const openweatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${country.capital}&appid=${api_key}`
+    axios.get(openweatherUrl).then(response => {
+      console.log('Weather API response:', response.data);
+      console.log('Temperature in Kelvin:', response.data.main.temp);
+
+      setTemperature(response.data.main.temp);
+      setWind(response.data.wind.speed);
+    });
+  }, [country, api_key])
+
+  // ---- RENDER ----
+
+   
+  if (countriesToShow.length > 10) {
+    return(
+     <div>
+        <p> find countries </p> <input value={newFilter} onChange={handleFilterChange} />
         <p>Too many matches, specify another filter</p>
-      ) : countriesToShow.length !== 1 ? (
-        <ul>
-          {countriesToShow.map(country => <li key={country.name.common}>{country.name.common} <button onClick={() => setNewFilter(country.name.common)}>show</button> </li>)}
-        </ul>
-      ) : (
-        <div>
-          <h1>{countriesToShow[0].name.common}</h1>
-          <p>capital {countriesToShow[0].capital}</p>
-          <p>area {countriesToShow[0].area}</p>
-          <h2>languages:</h2>
-          <ul>
-            {Object.values(countriesToShow[0].languages).map(language => <li key={language}>{language}</li>)}
-          </ul>
-          <img src={countriesToShow[0].flags.png} />
-        </div>
-      )
-      
-      }
-    </>
+     </div>
+    )
+  }
+
+  if (countriesToShow.length !== 1) {
+    return (
+      <div>
+        <p> find countries </p> <input value={newFilter} onChange={handleFilterChange} />
+         <ul>
+        {countriesToShow.map(country => (
+          <li key={country.name.common}>
+            {country.name.common}
+            <button
+              onClick={() => setNewFilter(country.name.common)}
+            >
+              show
+            </button>
+          </li>
+        ))}
+      </ul>
+      </div>
+     
+    )
+  }
+
+  return (
+    <div>
+      <p> find countries </p> <input value={newFilter} onChange={handleFilterChange} />
+      <h1>{country.name.common}</h1>
+      <p>capital {country.capital}</p>
+      <p>area {country.area}</p>
+
+      <h2>languages:</h2>
+      <ul>
+        {Object.values(country.languages).map(language => (
+          <li key={language}>{language}</li>
+        ))}
+      </ul>
+
+      <img src={country.flags.png} alt="flag" />
+
+      <h2>Weather in {country.capital}</h2>
+      <p>temperature in Kelvin (K) {temperature}</p>
+      <p>wind speed (m/s) {wind}</p>
+    </div>
   )
 }
+
+
 
 export default App
