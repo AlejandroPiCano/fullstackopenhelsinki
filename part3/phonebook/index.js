@@ -43,6 +43,10 @@ app.post('/api/persons', express.json(), (req, res) => {
   if (!name || !number) {
     return res.status(400).json({ error: 'Name and number are required' });
   }
+  if (persons.find(p => p.name.toLowerCase() === name.toLowerCase())) {
+    return res.status(400).json({ error: 'Name must be unique' });
+  }
+
   const newPerson = {
     id: Math.random() * 1000000,
     name,
