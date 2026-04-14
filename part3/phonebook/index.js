@@ -1,5 +1,8 @@
 const express = require('express');
+const morgan = require('morgan');
+
 const app = express();
+app.use(express.json());
 
 const persons = [
   {
@@ -23,6 +26,10 @@ const persons = [
     "number": "39-23-6423122"
   }
 ];
+
+// Middleware para registrar todas las peticiones
+morgan.token('body', (req, res) => JSON.stringify(req.body));
+app.use(morgan(':method :url :status :response-time ms - Body: :body'));
 
 app.get('/api/persons', (req, res) => {
   res.json(persons);
