@@ -38,6 +38,21 @@ app.get('/api/persons/:id', (req, res) => {
   }
 });
 
+app.post('/api/persons', express.json(), (req, res) => {
+  const { name, number } = req.body;    
+  if (!name || !number) {
+    return res.status(400).json({ error: 'Name and number are required' });
+  }
+  const newPerson = {
+    id: Math.random() * 1000000,
+    name,
+    number
+  };
+  persons.push(newPerson);
+  res.status(201).json(newPerson);
+});
+
+
 app.delete('/api/persons/:id', (req, res) => {
   const id = Number(req.params.id);
   const person = persons.find(p => p.id === id);
